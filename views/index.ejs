@@ -8,9 +8,10 @@
         height: 60vh;
     }
 </style>
+<h1 class="text-center">Schedule</h1>
+
 <div id='map'></div>
 <button id="fit" class="btn btn-warning mt-3">Fit to Singapore</button>
-
 <!-- <style>
     #fit {
     display: block;
@@ -56,4 +57,10 @@
     const marker = new mapboxgl.Marker()
         .setLngLat([103.8, 1.35])
         .addTo(map);
+    
+    const test = <%- JSON.stringify(location) %>;
+
+    const newMarker = new mapboxgl.Marker()
+        .setLngLat(test)
+        .addTo(map)
 </script>

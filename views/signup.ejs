@@ -16,6 +16,11 @@
                         <label for="email" class="form-label">Email Address</label>
                         <input id="email" name="email" type="email" class="form-control" required>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="postal" class="form-label">Postal Code</label>
+                        <input type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" id="postal" maxlength="6" name="postal" class="form-control" required>
+                    </div>
                 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>

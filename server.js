@@ -6,6 +6,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+const axios = require('axios');
 
 mongoose.connect('mongodb://localhost:27017/visitme', {
     useNewUrlParser: true,
@@ -71,8 +72,15 @@ app.get('/signup', (req, res) => {
 
 app.post('/signup', async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
-    const user = new User({ username, email });
+    const { username, email, password, postalcode } = req.body;
+    const params = {
+      auth: '655070743689255475666x69593',
+      locate: postalcode,
+      json: '1'
+    }
+    const coords = await axios.get('https://geocode.xyz', {params});
+    const location = [coords.data.longt, coords.data.latt];
+    const user = new User({ username, email, location });
     const newUser = await User.register(user, password);
     req.login(newUser, err => {
       if (err) next(err);
@@ -98,8 +106,11 @@ app.get('/logout', (req, res) => {
 })
 
 // Home page
-app.get('/home', isLoggedIn, (req, res) => {
-  res.render('index');
+app.get('/home', isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user._id);
+  console.log(user.location);
+
+  res.render('index', { location });
 })
 
 app.listen(3000, () => {
