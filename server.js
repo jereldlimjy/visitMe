@@ -54,9 +54,14 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+})
+
 // Landing page
 app.get('/', (req, res) => {
-  res.render('landing');
+  return req.user ? res.redirect('/home') : res.render('landing');
 })
 
 // Authentication
