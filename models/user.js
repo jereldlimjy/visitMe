@@ -21,23 +21,12 @@ const UserSchema = new Schema({
         type: Date,
         default: () => Date.now()
     },
-    visits: [
-    	{
-            host: {
-                type: Schema.Types.ObjectId,
-                ref: 'User'
-            },
-            startTime: {
-                type: Date, 
-                required: true 
-            },
-            endTime: { 
-                type: Date, 
-                required: true 
-            },
-            details: String
-    	}
-   	]
+    // visits: [
+    //     {
+    //         type: Schema.Types.ObjectId,
+    //         ref: 'Visit'
+    //     }
+   	// ]
 })
 
 
