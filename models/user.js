@@ -23,7 +23,7 @@ const UserSchema = new Schema({
     	endTime:{type:String , required: true },
     	details:{type:String}
     	}
-   	   ]
+   	]
 })
 
 

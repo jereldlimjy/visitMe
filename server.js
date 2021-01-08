@@ -72,10 +72,10 @@ app.get('/signup', (req, res) => {
 
 app.post('/signup', async (req, res, next) => {
   try {
-    const { username, email, password, postalcode } = req.body;
+    const { username, email, password, postal } = req.body;
     const params = {
       auth: '655070743689255475666x69593',
-      locate: postalcode,
+      locate: postal,
       json: '1'
     }
     const coords = await axios.get('https://geocode.xyz', {params});
@@ -106,9 +106,9 @@ app.get('/logout', (req, res) => {
 })
 
 // Home page
-app.get('/home', isLoggedIn, (req, res) => {
-  console.log(req.user);
-  res.render('index');
+app.get('/home', isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user._id);
+  res.render('index', { location: user.location });
 })
 
 app.get('/form', isLoggedIn, (req,res) => {
