@@ -114,10 +114,7 @@ app.get('/home', isLoggedIn, async (req, res) => {
     }
   });
 
-  const visits = [];
-  user.visits.map(visit => visits.push(visit.host.location));
-  console.log(visits);
-  res.render('index', { location: user.location, visits });
+  res.render('index', { location: user.location, visits: user.visits });
 })
 
 app.get('/form', isLoggedIn, (req, res) => {

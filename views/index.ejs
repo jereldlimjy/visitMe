@@ -72,7 +72,8 @@
 
     visits.forEach(visit => {
         const newMarker = new mapboxgl.Marker()
-        .setLngLat(visit)
+        .setLngLat(visit.host.location)
+        .setPopup(new mapboxgl.Popup().setHTML("<h3>" + visit.details + "</h3>"))
         .addTo(map)
     })
 </script>
