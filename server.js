@@ -108,7 +108,7 @@ app.get('/logout', (req, res) => {
 // Home page
 app.get('/home', isLoggedIn, async (req, res) => {
   const user = await User.findById(req.user._id);
-  res.render('index', { location: user.location });
+  res.render('index', { location: user.location, visits: user.visits});
 })
 
 app.get('/form', isLoggedIn, (req,res) => {
@@ -128,6 +128,8 @@ catch(error) {
   res.redirect('/form');
 }
 })
+
+
 
 app.listen(3000, () => {
   console.log("SERVER IS UP!");

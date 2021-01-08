@@ -14,6 +14,19 @@
 
 <a href="/form" class="btn btn-primary btn-lg mb-3">Add User Form</a>
 
+<div class='container'>
+    <div class="row mb-3" style="border: 3px solid red">
+    <h5>
+        <% for (let visit of visits){ %>
+        Username: <%= visit.userName %> <br/>
+        Start Time: <%= visit.startTime %> <br/>
+        End Time: <%= visit.endTime %> <br/>
+        Details: <%= visit.details %> <br/>
+        <% } %>
+    </h5>
+    </div>
+</div>
+
 <div id='map'></div>
 
 <button id="fit" class="btn btn-warning mt-3">Fit to Singapore</button>
@@ -68,4 +81,5 @@
     const newMarker = new mapboxgl.Marker()
         .setLngLat(test)
         .addTo(map)
+
 </script>
