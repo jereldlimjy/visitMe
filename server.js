@@ -113,7 +113,7 @@ app.get('/signup', (req, res) => {
 
 app.post('/signup', async (req, res, next) => {
   try {
-    const { username, email, password, postal } = req.body;
+    const { username, link, email, password, postal } = req.body;
     const params = {
       auth: '655070743689255475666x69593',
       locate: postal,
@@ -121,7 +121,7 @@ app.post('/signup', async (req, res, next) => {
     }
     const coords = await axios.get('https://geocode.xyz', {params});
     const location = [coords.data.longt, coords.data.latt];
-    const user = new User({ username, email, location });
+    const user = new User({ username, email, link, location });
     const newUser = await User.register(user, password);
     req.login(newUser, err => {
       if (err) next(err);

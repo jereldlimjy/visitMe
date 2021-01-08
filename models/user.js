@@ -7,6 +7,11 @@ const UserSchema = new Schema({
         type: Array,
         required: true
     },
+    link: {
+        type: String,
+        required: true,
+        unique: true
+    },
     email: {
         type: String,
         required: true,
