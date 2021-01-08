@@ -99,9 +99,29 @@ app.get('/logout', (req, res) => {
 
 // Home page
 app.get('/home', isLoggedIn, (req, res) => {
+  console.log(req.user);
   res.render('index');
+})
+
+app.get('/form', isLoggedIn, (req,res) => {
+  res.render('form');
+})
+
+app.post('/form', isLoggedIn, async (req,res) => {
+  try{
+  const visitDetails = req.body.visit;
+  const user = await User.findById(req.user._id);
+  user.visits.push(visitDetails);
+  await user.save();
+  res.redirect('/home');
+}
+catch(error) {
+  console.log(error);
+  res.redirect('/form');
+}
 })
 
 app.listen(3000, () => {
   console.log("SERVER IS UP!");
 })
+
