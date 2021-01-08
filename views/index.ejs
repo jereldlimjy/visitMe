@@ -128,10 +128,19 @@
     //     .setLngLat([103.8, 1.35])
     //     .addTo(map);
     
-    // const test = <%- JSON.stringify(location) %>;
-    // const newMarker = new mapboxgl.Marker()
-    //     .setLngLat(test)
-    //     .addTo(map)
+    const myLocation = <%- JSON.stringify(location) %>;
+
+
+    const visitors = <%- JSON.stringify(visitors) %>;
+    console.log(visitors.length);
+    if (visitors.length) {
+        const newMarker = new mapboxgl.Marker({
+            color: '#FF0000'
+        })
+        .setLngLat(myLocation)
+        .setPopup(new mapboxgl.Popup().setHTML('<h6>My location. Someone will be visiting me!</h6>'))
+        .addTo(map)
+    }
     
     const visits = <%- JSON.stringify(visits) %>;
 
