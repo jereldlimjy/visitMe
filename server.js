@@ -119,7 +119,7 @@ app.get('/home', isLoggedIn, async (req, res) => {
   // });
   const user = await User.findById(req.user._id);
   const visits = await Visit.find({ visitor: user }).populate('host');
-  const visitors = await Visit.find({ host: user });
+  const visitors = await Visit.find({ host: user }).populate('visitor');
 
   res.render('index', { location: user.location, visits, visitors });
 })
