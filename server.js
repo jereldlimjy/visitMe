@@ -107,26 +107,37 @@ app.get('/logout', (req, res) => {
 
 // Home page
 app.get('/home', isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user._id);
-  res.render('index', { location: user.location });
+  const user = await User.findById(req.user._id).populate({
+    path: 'visits',
+    populate: {
+      path: 'host'
+    }
+  });
+
+  const visits = [];
+  user.visits.map(visit => visits.push(visit.host.location));
+  console.log(visits);
+  res.render('index', { location: user.location, visits });
 })
 
-app.get('/form', isLoggedIn, (req,res) => {
+app.get('/form', isLoggedIn, (req, res) => {
   res.render('form');
 })
 
 app.post('/form', isLoggedIn, async (req,res) => {
-  try{
-  const visitDetails = req.body.visit;
-  const user = await User.findById(req.user._id);
-  user.visits.push(visitDetails);
-  await user.save();
-  res.redirect('/home');
-}
-catch(error) {
-  console.log(error);
-  res.redirect('/form');
-}
+  try {
+    const visitDetails = req.body.visit;
+    const hostUsername = req.body.visit.host;
+    const user = await User.findById(req.user._id);
+    const host = await User.findOne({ username: hostUsername });
+    visitDetails.host = host;
+    user.visits.push(visitDetails);
+    await user.save();
+    res.redirect('/home');
+  } catch(error) {
+    console.log(error);
+    res.redirect('/form');
+  }
 })
 
 app.listen(3000, () => {

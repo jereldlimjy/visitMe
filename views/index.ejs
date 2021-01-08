@@ -63,9 +63,16 @@
     //     .setLngLat([103.8, 1.35])
     //     .addTo(map);
     
-    const test = <%- JSON.stringify(location) %>;
+    // const test = <%- JSON.stringify(location) %>;
+    // const newMarker = new mapboxgl.Marker()
+    //     .setLngLat(test)
+    //     .addTo(map)
+    
+    const visits = <%- JSON.stringify(visits) %>;
 
-    const newMarker = new mapboxgl.Marker()
-        .setLngLat(test)
+    visits.forEach(visit => {
+        const newMarker = new mapboxgl.Marker()
+        .setLngLat(visit)
         .addTo(map)
+    })
 </script>

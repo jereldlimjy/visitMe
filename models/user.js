@@ -18,10 +18,19 @@ const UserSchema = new Schema({
     },
     visits: [
     	{
-    	userName:{type:String , required: true },
-    	startTime:{type:String , required: true },
-    	endTime:{type:String , required: true },
-    	details:{type:String}
+            host: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            startTime: {
+                type:String, 
+                required: true 
+            },
+            endTime: { 
+                type:String, 
+                required: true 
+            },
+            details: String
     	}
    	]
 })
