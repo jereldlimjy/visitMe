@@ -1,31 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VisitMe: Signup</title>
-</head>
-<body>
-    <h1>Sign up</h1>
-    <form action="/signup" method="POST">
-        <div>
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" required>
+<%- layout('layouts/boilerplate') %>
+<div class="row">
+    <div class="col-4 offset-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Sign up</h3>
+            </div>
+            <div class="card-body">
+                <form action="/signup" method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input id="username" name="username" type="text" class="form-control" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input id="email" name="email" type="email" class="form-control" required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button class="btn btn-success">Sign up</button>
+                    </div>
+                </form>      
+            </div>
         </div>
-
-        <div>
-            <label for="email">Email Address</label>
-            <input id="email" name="email" type="email" required>
-        </div>
-    
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-
-        <div>
-            <button>Sign up</button>
-        </div>
-    </form>
-</body>
-</html>
+    </div>
+</div>

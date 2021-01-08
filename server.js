@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const ejsMate = require('ejs-mate');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
@@ -41,8 +42,9 @@ const app = express();
 
 app.use(session(sessionConfig));
 app.use(express.urlencoded({ extended: true }));
+app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/views'));
+app.set('views', path.join(__dirname, 'views'));
 
 // Passport stuff
 app.use(passport.initialize());
