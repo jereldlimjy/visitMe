@@ -7,6 +7,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const axios = require('axios');
+const favicon = require('serve-favicon');
 
 mongoose.connect('mongodb://localhost:27017/visitme', {
     useNewUrlParser: true,
@@ -59,6 +60,8 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 })
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 // Landing page
 app.get('/', (req, res) => {
@@ -136,8 +139,6 @@ app.post('/form', isLoggedIn, async (req,res) => {
     res.redirect('/form');
   }
 })
-
-
 
 app.listen(3000, () => {
   console.log("SERVER IS UP!");
