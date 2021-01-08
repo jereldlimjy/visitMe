@@ -1,15 +1,97 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+
+mongoose.connect('mongodb://localhost:27017/visitme', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+})
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('Database connected!');
+});
+
+const isLoggedIn = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    res.redirect('/login');
+  }
+  next();
+}
+
+const sessionConfig = {
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+      httpOnly: true,
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+}
+
 const app = express();
 
+app.use(session(sessionConfig));
+app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
+// Passport stuff
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Landing page
 app.get('/', (req, res) => {
-  res.send('this is the landing page');
+  res.render('landing');
 })
 
-app.get('/home', (req, res) => {
+// Authentication
+app.get('/signup', (req, res) => {
+  res.render('signup');
+})
+
+app.post('/signup', async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
+    const user = new User({ username, email });
+    const newUser = await User.register(user, password);
+    req.login(newUser, err => {
+      if (err) next(err);
+      res.redirect('/home');
+    })
+  } catch(err) {
+    console.log(err);
+    res.redirect('/signup');
+  }
+})
+
+app.get('/login', (req, res) => {
+  res.render('login');
+})
+
+app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
+  res.redirect('/home');
+})
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+})
+
+// Home page
+app.get('/home', isLoggedIn, (req, res) => {
   res.render('index');
 })
 
