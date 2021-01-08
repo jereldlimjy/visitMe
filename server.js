@@ -111,7 +111,7 @@ app.get('/home', isLoggedIn, async (req, res) => {
     path: 'visits',
     populate: {
       path: 'host'
-    }
+    },
   });
 
   res.render('index', { location: user.location, visits: user.visits });

@@ -23,11 +23,11 @@ const UserSchema = new Schema({
                 ref: 'User'
             },
             startTime: {
-                type:String, 
+                type: Date, 
                 required: true 
             },
             endTime: { 
-                type:String, 
+                type: Date, 
                 required: true 
             },
             details: String

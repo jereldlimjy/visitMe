@@ -11,25 +11,43 @@
     }
 </style>
 
-
-<a href="/form" class="btn btn-primary btn-lg mb-3">Add User Form</a>
-
-<div class='container'>
-    <div class="row mb-3" style="border: 3px solid red">
-    <h5>
-        <% for (let visit of visits){ %>
-        Username: <%= visit.userName %> <br/>
-        Start Time: <%= visit.startTime %> <br/>
-        End Time: <%= visit.endTime %> <br/>
-        Details: <%= visit.details %> <br/>
-        <% } %>
-    </h5>
-    </div>
+<div class="row mb-1">
+    <div class="col"></div>
+    <div class="col"><span class="d-block text-center fs-1 fw-bold">Schedule</span></div>
+    <div class="col text-end"><a href="/form" class="btn btn-primary mt-2">Add a new visit!</a></div>
 </div>
+<% if (visits.length > 0) { %> 
+<table class="table table-striped table-hover text-center align-middle">
+    <thead>
+        <tr>
+            <th class="col">No.</th>
+            <th class="col">Host</th>
+            <th class="col">Details</th>
+            <th class="col">Start</th>
+            <th class="col">End</th>
+            <th class="col">Date</th>
+        </tr>
+        <tbody>
+            <% for (let i = 0; i < visits.length; i++) { %>
+                <tr>
+                    <th><%= i + 1 %></th>
+                    <td><%= visits[i].host.username %></td>
+                    <td><%= visits[i].details %></td>
+                    <td><%= visits[i].startTime.toLocaleTimeString() %></td>
+                    <td><%= visits[i].endTime.toLocaleTimeString() %></td>
+                    <td><%= visits[i].endTime.toLocaleDateString() %></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </thead>
+</table>
+<% } else { %>
+    <h2 class="text-center">No visits scheduled... schedule one now!</h2>
+<% } %> 
 
 <div id='map'></div>
 
-<button id="fit" class="btn btn-warning mt-3">Fit to Singapore</button>
+<button id="fit" class="btn btn-warning my-3">Fit to Singapore</button>
 <!-- <style>
     #fit {
     display: block;
@@ -86,7 +104,7 @@
     visits.forEach(visit => {
         const newMarker = new mapboxgl.Marker()
         .setLngLat(visit.host.location)
-        .setPopup(new mapboxgl.Popup().setHTML("<h3>" + visit.details + "</h3>"))
+        .setPopup(new mapboxgl.Popup().setHTML("<p>" + visit.details + "</p>"))
         .addTo(map)
     })
 </script>
