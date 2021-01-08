@@ -17,6 +17,11 @@
     <div class="col text-end"><a href="/form" class="btn btn-primary mt-2">Add a new visit!</a></div>
 </div>
 <% if (visits.length > 0) { %> 
+<div class="row mb-1">
+    <div class="col"></div>
+    <div class="col"><span class="d-block text-center fs-1 fw-bold">I am visiting...</span></div>
+    <div class="col"></div>
+</div>
 <table class="table table-striped table-hover text-center align-middle">
     <thead>
         <tr>
@@ -43,6 +48,40 @@
 </table>
 <% } else { %>
     <h2 class="text-center">No visits scheduled... schedule one now!</h2>
+<% } %> 
+
+<% if (visits.length > 0) { %> 
+<div class="row mb-1">
+    <div class="col"></div>
+    <div class="col"><span class="d-block text-center fs-1 fw-bold">Visiting me!</span></div>
+    <div class="col"></div>
+</div>
+<table class="table table-striped table-hover text-center align-middle">
+    <thead>
+        <tr>
+            <th class="col">No.</th>
+            <th class="col">Visitor</th>
+            <th class="col">Details</th>
+            <th class="col">Start</th>
+            <th class="col">End</th>
+            <th class="col">Date</th>
+        </tr>
+        <tbody>
+            <% for (let i = 0; i < visits.length; i++) { %>
+                <tr>
+                    <th><%= i + 1 %></th>
+                    <td><%= visitors[i].visitor.username %></td>
+                    <td><%= visitors[i].details %></td>
+                    <td><%= visitors[i].startTime.toLocaleTimeString() %></td>
+                    <td><%= visitors[i].endTime.toLocaleTimeString() %></td>
+                    <td><%= visitors[i].endTime.toLocaleDateString() %></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </thead>
+</table>
+<% } else { %>
+    <h2 class="text-center">No one's visiting... for now!</h2>
 <% } %> 
 
 <div id='map'></div>
