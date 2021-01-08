@@ -11,8 +11,18 @@ const UserSchema = new Schema({
     joined: {
         type: Date,
         default: () => Date.now()
-    }
+    },
+    visits: [
+    	{
+    	userName:{type:String , required: true },
+    	startTime:{type:String , required: true },
+    	endTime:{type:String , required: true },
+    	details:{type:String}
+    	}
+   	   ]
 })
+
+
 
 UserSchema.plugin(passportLocalMongoose);
 
