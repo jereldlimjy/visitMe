@@ -50,7 +50,7 @@
     <h2 class="text-center">No visits scheduled... schedule one now!</h2>
 <% } %> 
 
-<% if (visits.length > 0) { %> 
+<% if (visitors.length > 0) { %> 
 <div class="row mb-1">
     <div class="col"></div>
     <div class="col"><span class="d-block text-center fs-1 fw-bold">Visiting me!</span></div>
@@ -67,7 +67,7 @@
             <th class="col">Date</th>
         </tr>
         <tbody>
-            <% for (let i = 0; i < visits.length; i++) { %>
+            <% for (let i = 0; i < visitors.length; i++) { %>
                 <tr>
                     <th><%= i + 1 %></th>
                     <td><%= visitors[i].visitor.username %></td>
