@@ -10,6 +10,7 @@ const Visit = require('./models/visit');
 const axios = require('axios');
 const flash = require('connect-flash');
 const favicon = require('serve-favicon');
+const methodOverride = require('method-override');
 
 mongoose.connect('mongodb://localhost:27017/visitme', {
     useNewUrlParser: true,
@@ -48,6 +49,7 @@ app.use(session(sessionConfig));
 app.use(flash());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
@@ -135,6 +137,7 @@ app.get('/home', isLoggedIn, async (req, res) => {
   res.render('index', { location: user.location, visits, visitors });
 })
 
+// Add new visit
 app.get('/form', isLoggedIn, (req, res) => {
   res.render('form');
 })
@@ -154,6 +157,19 @@ app.post('/form', isLoggedIn, async (req,res) => {
     console.log(error);
     req.flash('error', error.message);
     res.redirect('/form');
+  }
+})
+
+// Delete a visit
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Visit.findByIdAndDelete(id);
+    req.flash('success', 'Successfully removed visit!');
+    res.redirect('/home');
+  } catch (e) {
+    req.flash('error', 'Oh no! Something went wrong :( Please try again!');
+    res.redirect('/home');
   }
 })
 
