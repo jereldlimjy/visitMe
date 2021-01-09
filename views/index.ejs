@@ -39,6 +39,7 @@ body {
             <th class="col">Start</th>
             <th class="col">End</th>
             <th class="col">Date</th>
+            <th class="col"></th>
         </tr>
         <tbody>
             <% for (let i = 0; i < visits.length; i++) { %>
@@ -49,6 +50,11 @@ body {
                     <td><%= visits[i].startTime.toLocaleTimeString() %></td>
                     <td><%= visits[i].endTime.toLocaleTimeString() %></td>
                     <td><%= visits[i].endTime.toLocaleDateString() %></td>
+                    <td>
+                        <form action="/delete/<%= visits[i]._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             <% } %>
         </tbody>
@@ -160,7 +166,7 @@ body {
     visits.forEach(visit => {
         const newMarker = new mapboxgl.Marker()
         .setLngLat(visit.host.location)
-        .setPopup(new mapboxgl.Popup().setHTML(`<h6>${visit.host.username}</h6><a href=${visit.host.link} target="blank">Visit Me</a><p>${visit.details}</p>`))
+        .setPopup(new mapboxgl.Popup().setHTML(`<h6 class="text-center">${visit.host.username}</h6><a href=${visit.host.link} target="blank">Visit Me</a><p>${visit.details}</p>`))
         .addTo(map)
     })
 </script>
