@@ -8,6 +8,7 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const Visit = require('./models/visit');
 const axios = require('axios');
+const flash = require('connect-flash');
 const favicon = require('serve-favicon');
 
 mongoose.connect('mongodb://localhost:27017/visitme', {
@@ -44,7 +45,10 @@ const sessionConfig = {
 const app = express();
 
 app.use(session(sessionConfig));
+app.use(flash());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -59,6 +63,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
   next();
 })
 
@@ -92,6 +98,7 @@ app.post('/signup', async (req, res, next) => {
     })
   } catch(err) {
     console.log(err);
+    req.flash('error', err.message);
     res.redirect('/signup');
   }
 })
@@ -100,7 +107,7 @@ app.get('/login', (req, res) => {
   res.render('login');
 })
 
-app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
+app.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
   res.redirect('/home');
 })
 
@@ -117,9 +124,13 @@ app.get('/home', isLoggedIn, async (req, res) => {
   //     path: 'host'
   //   },
   // });
+  
+  // Query for visits and visitors, sorted according to startTime and filtered to show future visits/visitors
+  const cutoff = new Date();
+
   const user = await User.findById(req.user._id);
-  const visits = await Visit.find({ visitor: user }).populate('host');
-  const visitors = await Visit.find({ host: user }).populate('visitor');
+  const visits = await Visit.find({ visitor: user, endTime: { $gt: cutoff } }).sort({startTime: '1'}).populate('host');
+  const visitors = await Visit.find({ host: user, endTime: { $gt: cutoff } }).sort({startTime: '1'}).populate('visitor');
 
   res.render('index', { location: user.location, visits, visitors });
 })
@@ -131,21 +142,25 @@ app.get('/form', isLoggedIn, (req, res) => {
 app.post('/form', isLoggedIn, async (req,res) => {
   try {
     const visitDetails = req.body.visit;
-    const hostUsername = req.body.visit.host;
     const visitor = await User.findById(req.user._id);
-    const host = await User.findOne({ username: hostUsername });
+    const host = await User.findOne({ username: req.body.visit.host });
     visitDetails.host = host;
     visitDetails.visitor = visitor;
     const visit = new Visit(visitDetails);
     await visit.save();
+    req.flash('success', 'New visit added!');
     res.redirect('/home');
   } catch(error) {
     console.log(error);
+    req.flash('error', error.message);
     res.redirect('/form');
   }
+})
+
+app.get('*', (req, res) => {
+  res.redirect('/');
 })
 
 app.listen(3000, () => {
   console.log("SERVER IS UP!");
 })
-
